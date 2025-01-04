@@ -19,3 +19,75 @@ model Product {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  username  String   @unique
+  password  String
+  email     String   @unique
+  role      String
+  enabled   Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Meta {
+  id          Int        @id @default(autoincrement())
+  title       String
+  description String
+  category    String
+  startDate   DateTime
+  deadline    DateTime
+  state       String
+  progress    Float      @default(0.0)
+  image       String?
+  color       String
+  enabled     Boolean    @default(true)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  smart       MetaSmart?
+  tasks       Task[]
+  visionBoard Vision[]
+}
+
+model MetaSmart {
+  id         Int      @id @default(autoincrement())
+  metaId     Int      @unique
+  specific   String
+  measurable String
+  achievable String
+  relevant   String
+  timeBound  String
+  enabled    Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  meta       Meta     @relation(fields: [metaId], references: [id])
+}
+
+model Task {
+  id          Int      @id @default(autoincrement())
+  metaId      Int
+  title       String
+  description String
+  createdAt   DateTime @default(now())
+  deadline    DateTime
+  state       String
+  priority    Int
+  responsible String?
+  attachment  String?
+  enabled     Boolean  @default(true)
+  updatedAt   DateTime @updatedAt
+  meta        Meta     @relation(fields: [metaId], references: [id])
+}
+
+model Vision {
+  id          Int      @id @default(autoincrement())
+  metaId      Int
+  imageUrl    String
+  description String
+  enabled     Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  meta        Meta     @relation(fields: [metaId], references: [id])
+}
